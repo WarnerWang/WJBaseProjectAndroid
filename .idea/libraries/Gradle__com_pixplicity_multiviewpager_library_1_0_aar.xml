@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: com.pixplicity.multiviewpager:library:1.0@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/bc3f34b500f7d30166164940da2dea56/jetified-library-1.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/bc3f34b500f7d30166164940da2dea56/jetified-library-1.0/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.pixplicity.multiviewpager/library/1.0/48f11018cdf86b36b0a053d73bad631ab130c24c/library-1.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.pixplicity.multiviewpager/library/1.0/bee2b9cef160c91c3808a4c1ee8d9ad64b4d3646/library-1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

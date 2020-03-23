@@ -1,0 +1,165 @@
+
+// 版本号 versionName 根据此字段生成
+int appVersionCode = 100
+
+def static getAppVersionName(int appVersionCode) {
+    char[] chars = String.valueOf(appVersionCode).toCharArray()
+    String result = "v"
+    for (int i = 0; i < chars.length; i++) {
+        if (i == chars.length - 1) {
+            result += chars[i]
+        } else {
+            result += chars[i]
+            result += "."
+        }
+    }
+    return result
+}
+
+
+apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
+
+
+android {
+    signingConfigs {
+        release {
+            keyAlias 'release'
+            keyPassword 'android'
+            storeFile file('../keyStore')
+            storePassword 'android'
+        }
+    }
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.hx.wjbaseproject"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode appVersionCode
+        versionName getAppVersionName(appVersionCode)
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.release
+        multiDexEnabled true
+        ndk {
+            //根据需要 自行选择添加的对应cpu类型的.so库。
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
+        }
+        dexOptions{
+            preDexLibraries = false
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    afterEvaluate {
+        tasks.matching {
+            it.name.startsWith('dex')
+        }.each { dx ->
+            if (dx.additionalParameters == null) {
+                dx.additionalParameters = ['--multi-dex']
+            } else {
+                dx.additionalParameters += '--multi-dex'
+            }
+            // optional
+            dx.additionalParameters = ['--set-max-idx-number=方法数量']
+        }
+    }
+    flavorDimensions "color"
+    productFlavors {
+        _stage {
+            buildConfigField 'String', 'API_TYPE', '"release"'
+            versionNameSuffix "-release"
+            dimension "color"
+            // 账号配置
+//            manifestPlaceholders = [
+//            ]
+        }
+        _dev {
+            buildConfigField 'String', 'API_TYPE', '"dev"'
+            versionNameSuffix "-dev"
+            dimension "color"
+            // 账号配置
+//            manifestPlaceholders = [
+//            ]
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    //base
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+//    implementation 'com.android.support:appcompat-v7:28.0.0'
+//    implementation 'com.android.support:support-v4:28.0.0'
+//    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+//    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.support:multidex:1.0.3'
+
+    //butterknife
+    implementation 'com.jakewharton:butterknife:10.2.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
+    //eventBus
+    implementation 'org.greenrobot:eventbus:3.2.0'
+
+    // 控件
+    implementation 'com.pixplicity.multiviewpager:library:1.0'
+
+    //okhttp rxjava fastJson
+    implementation 'com.squareup.okhttp3:okhttp:4.4.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.4.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.7.2'
+    implementation 'com.squareup.retrofit2:adapter-rxjava:2.7.2'
+    implementation 'com.alibaba:fastjson:1.2.67'
+    implementation 'com.squareup.okio:okio:2.5.0'
+    implementation 'org.ligboy.retrofit2:converter-fastjson-android:2.2.0'
+    implementation 'io.reactivex:rxandroid:1.2.1'
+    implementation 'io.reactivex:rxjava:1.3.8'
+    implementation 'com.kailashdabhi:om-recorder:1.1.0'
+    //glide
+    implementation 'com.github.bumptech.glide:okhttp3-integration:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+
+    implementation 'com.google.guava:guava:28.2-jre'
+    //修改状态栏颜色
+    implementation('com.github.niorgai:StatusBarCompat:2.1.4', {
+        exclude group: 'com.android.support'
+    })
+    implementation 'com.gyf.barlibrary:barlibrary:2.3.0'
+
+    //webview js交互
+    implementation 'com.just.agentweb:agentweb:4.0.2'
+    //dialog view
+    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+    implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
+    //refreshlayout
+    implementation 'cn.bingoogolapple:bga-refreshlayout:1.1.8'
+}
